@@ -6,7 +6,7 @@
 /*   By: achretie <achretie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 15:13:52 by achretie          #+#    #+#             */
-/*   Updated: 2022/12/06 14:07:04 by mafissie         ###   ########.fr       */
+/*   Updated: 2022/12/12 00:26:05 by achretie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,46 @@ void	ft_init_data(t_data *data, char **envp)
 		i++;
 	head = ft_fill_list(head, envp, i);
 	data->envp = head;
+	data->input = NULL;
+	data->cd_str = NULL;
+	data->ret_value = 0;
+	data->exit = 0;
+	data->cmd = NULL;
+	data->full_cmd = NULL;
+	data->pid = 0;
+	data->idoc = 0;
 }
 
-void	ft_echo(t_data *data)
+void	ft_echo(t_args *args)
 {
-	if (!data->echo_flag)
-		printf("%s\n", data->echo_str);
-	else if (data->echo_flag)
-		printf("%s", data->echo_str);
+	t_args	*tmp;
+
+	tmp = args;
+	if (!args->next)
+		return ;
+	if (!ft_strncmp(args->next->content, "-n", ft_strlen(args->next->content)))
+	{
+		args = args->next;
+		while (args->next)
+		{
+			printf("%s", args->next->content);
+			args = args->next;
+			if (args->content)
+				printf(" ");
+		}
+	}
+	else
+	{
+		while (args->next)
+		{
+			printf("%s", args->next->content);
+			args = args->next;
+			if (args->content)
+				printf(" ");
+		}
+		printf("\n");
+	}
+	args = tmp;
 }
 
 void	ft_pwd(void)
@@ -131,6 +163,7 @@ int	ft_cd(t_data *data) //Penser a verifier si les $var sont accessibles et on p
 	{
 		if (chdir(data->cd_str) == -1)
 		{
+			printf("cd: no such file or directory: %s\n", data->cd_str);
 			free(old_pwd);
 			return (-1);
 		}
@@ -152,4 +185,13 @@ void	ft_env(t_data *data)
 		data->envp = data->envp->next;
 	}
 	data->envp = tmp;
+}
+
+int	ft_exit(t_args *args, t_data *data)
+{
+	(void)data;
+	list_free(&args);
+	//free_data();
+	printf("exit\n");
+	exit (0);
 }

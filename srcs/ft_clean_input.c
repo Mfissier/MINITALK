@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_clean_input.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: achretie <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: achretie <achretie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 15:56:04 by achretie          #+#    #+#             */
-/*   Updated: 2022/12/06 14:00:00 by mafissie         ###   ########.fr       */
+/*   Updated: 2022/12/12 02:01:48 by achretie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "mini.h"
 
 void	ft_remove_space_bis(int *i, int *j, char **input, char **new)
@@ -45,20 +46,13 @@ char	*ft_remove_space(char *input)
 	{
 		if (tmp_input[i] == '\'' || tmp_input[i] == '\"')
 			ft_remove_space_bis(&i, &j, &tmp_input, &new);
-		if (tmp_input[i] != ' ')
-			new[j++] = tmp_input[i++];
-		else if (tmp_input[i] == ' ')
-		{
-			new[j++] = tmp_input[i++];
-			while (tmp_input[i] && (tmp_input[i] == ' ' || tmp_input[i] == ';'
-					|| tmp_input[i] == '\\'))
-				i++;
-		}
-		else
-			i++;
+		if (tmp_input[i] == ' ')
+			new[j] = ' ';
+		new[j] = tmp_input[i];
+		i++;
+		j++;
 	}
 	new[i] = 0;
-	printf("CHAINE = %s\n", new);
 	free(tmp_input);
 	return (new);
 }

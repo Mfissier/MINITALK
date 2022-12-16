@@ -6,7 +6,7 @@
 /*   By: achretie <achretie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 14:14:43 by achretie          #+#    #+#             */
-/*   Updated: 2022/12/06 14:11:44 by mafissie         ###   ########.fr       */
+/*   Updated: 2022/12/13 18:20:09 by achretie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@
 # include <curses.h>
 # include <term.h>
 
-# define WRITE		1		
+extern int	ret_val;
+
+# define WRITE		1
 # define CMD		2
 # define BUILTINS	3
 # define ENV		4
@@ -59,8 +61,6 @@
 # define C_CYAN			"\x1B[36m"
 # define C_WHITE		"\x1B[37m"
 
-
-int	ret_v;
 typedef struct s_pex
 {
 	int		nb_cmd;
@@ -69,6 +69,7 @@ typedef struct s_pex
 	char	**full_cmd;
 	int		*pid;
 	int		bug;
+	pid_t	solo_pid;
 }				t_pex;
 
 typedef struct s_env
@@ -81,9 +82,7 @@ typedef struct s_env
 
 typedef struct s_data
 {
-	char	*line;
-	int		echo_flag;
-	char	*echo_str;
+	char	*input;
 	char	*cd_str;
 	int		ret_value;
 	int		exit;
@@ -133,14 +132,12 @@ int		construct_d_less(t_args **list, int *index, t_args **args);
 int		construct_pipe(t_args **list, int *index, t_args **args);
 int		construct_new_path(t_args **list, int *index, t_args **args);
 int		construct_cmd_opt(t_args **list, int *index, t_args **args);
-
-void	ft_echo(t_data *data);
 void	ft_init_data(t_data *data, char **envp);
 void	ft_pwd(void);
 
 //list_2.c
 int		ft_cd(t_data *data);
-void	ft_echo(t_data *data);
+void	ft_echo(t_args *args);
 void	ft_env(t_data *data);
 void	ft_unset(t_data *data, char *var);
 t_env	*ft_fill_list(t_env *head, char **envp, int envp_len);
@@ -158,9 +155,10 @@ char	*ft_get_key(char *content);
 void	ft_add_to_env(t_data *data, char *arg);
 void	ft_add_to_env_plus(t_data *data, char *arg);
 void	ft_print_export(t_data *data);
-int		multipipes(char **input, t_data *data, t_args *args);
+int		ft_start_commands(t_data *data, t_args *args);
 char	*ft_execve_path(char **cmd, char **envp, t_pex *p);
 void	ft_heredoc(t_data *data, char *delim);
+int		ft_exit(t_args *args, t_data *data);
 
 //ft_parse
 int		ft_free_path(char **data);
@@ -191,10 +189,10 @@ int		add_start_list(t_args **list);
 int		list_free(t_args **list);
 void	ft_trap(int signal);
 
-// ./utils_parse.c
+//utils_parse.c
 int		analysis_operator(t_args **list, int *index, char **sstr, t_args **args);
 
-// ./ft_free.c
+//ft_free.c
 void	free_sstr(char **sstr);
 
 #endif

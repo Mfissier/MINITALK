@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_data_cmd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mafissie <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: achretie <achretie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 21:17:36 by mafissie          #+#    #+#             */
-/*   Updated: 2022/11/07 18:46:53 by mafissie         ###   ########.fr       */
+/*   Updated: 2022/12/12 01:24:06 by achretie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,6 @@ void	fill_last_param(t_args **tmp, t_args **args, char **envp)
 		new_cmd = cmd_clean((*tmp)->content);
 		if ((*tmp)->type == WRITE)
 		{
-			printf("WRITE == %s\n", new_cmd);
 			if (ft_strlen(new_cmd) == 2)
 			{
 				if (new_cmd[0] == 'c' && new_cmd[1] == 'd')
