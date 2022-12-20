@@ -2,27 +2,30 @@
 LIBFT_PATH		=	./libs/libft
 LIBFT			=	$(LIBFT_PATH)/libft.a
 
-SOURCES_FILES	=	check_data_cmd.c \
-					construct_list_1.c \
-					construct_list_2.c \
-					construct_list.c \
-					duplicate_list.c \
-					ft_built_in.c \
-					ft_clean_input.c \
-					ft_exec.c \
-					ft_exit.c \
-					ft_export_bis.c \
-					ft_export.c \
-					ft_free.c \
-					ft_init_env.c \
-					ft_parse.c \
-					list_1.c \
-					list_2.c \
-					list.c \
-					main.c \
-					multipipes.c \
-					test.c \
-					utils_parse.c
+SOURCES_FILES	=	check_data_cmd.c 	\
+					construct_list_1.c	\
+					construct_list_2.c	\
+					construct_list.c	\
+					duplicate_list.c	\
+					ft_built_in.c		\
+					ft_clean_input.c	\
+					ft_exec.c			\
+					ft_exit.c			\
+					ft_export_bis.c		\
+					ft_export.c			\
+					ft_free.c			\
+					ft_init_env.c		\
+					ft_parse.c			\
+					list_1.c			\
+					list_2.c			\
+					list.c				\
+					main.c				\
+					multipipes.c		\
+					utils_parse.c		\
+					ft_redir.c			\
+					ft_pipe.c			\
+					ft_main_loop.c		\
+					ft_manage_env.c		\
 
 SOURCES_DIR		=	srcs
 
