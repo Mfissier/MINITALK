@@ -6,7 +6,7 @@
 /*   By: achretie <achretie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 20:31:34 by achretie          #+#    #+#             */
-/*   Updated: 2022/12/06 14:05:33 by mafissie         ###   ########.fr       */
+/*   Updated: 2022/12/20 08:55:44 by achretie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	**ft_parse_path(char **envp)
 	return (path);
 }
 
-char	*ft_execve_path(char **cmd, char **envp, t_pex *p)
+char	*ft_execve_path(char **cmd, char **envp)
 {
 	char	**path;
 	char	*word;
@@ -62,7 +62,6 @@ char	*ft_execve_path(char **cmd, char **envp, t_pex *p)
 		free(word);
 		free(full_word);
 	}
-	p->bug = 1;
 	ft_free_path(path);
 	return (0);
 }

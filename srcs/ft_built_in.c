@@ -6,53 +6,11 @@
 /*   By: achretie <achretie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 15:13:52 by achretie          #+#    #+#             */
-/*   Updated: 2022/12/12 00:26:05 by achretie         ###   ########.fr       */
+/*   Updated: 2022/12/20 09:20:28 by achretie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
-
-int	ft_setenv(t_data *data, char *var, char *content) //Permet de modifier une variable de notre env
-{
-	t_env	*save;
-
-	save = data->envp;
-	while (data->envp->next)
-	{
-		if (ft_strncmp(data->envp->content, var, ft_strlen(var)) == 0 && ft_strlen(var) == ft_strlen(data->envp->key))
-		{
-			free(data->envp->content);
-			data->envp->content = ft_strdup(var);
-			data->envp->content = ft_strjoin(data->envp->content, "=");
-			data->envp->content = ft_strjoin(data->envp->content, content);
-			data->envp = save;
-			return (1);
-		}
-		data->envp = data->envp->next;
-	}
-	data->envp = save;
-	return (0);
-}
-
-char	*ft_getenv(t_data *data, char *var) //Permet de recuperer la valeur d'une variable de notre env
-{
-	t_env	*save;
-	char	*content;
-
-	save = data->envp;
-	while (data->envp->next)
-	{
-		if (ft_strncmp(data->envp->content, var, ft_strlen(var)) == 0 && ft_strlen(var) == ft_strlen(data->envp->key))
-		{
-			content = ft_strdup(data->envp->content + ft_strlen(var) + 1);
-			data->envp = save;
-			return (content);
-		}
-		data->envp = data->envp->next;
-	}
-	data->envp = save;
-	return (NULL);
-}
 
 void	ft_unset(t_data *data, char *var)
 {
@@ -79,27 +37,6 @@ void	ft_unset(t_data *data, char *var)
 		data->envp = data->envp->next;
 	}
 	data->envp = save;
-}
-
-void	ft_init_data(t_data *data, char **envp)
-{
-	int		i;
-	t_env	*head;
-
-	head = NULL;
-	i = 0;
-	while (envp[i])
-		i++;
-	head = ft_fill_list(head, envp, i);
-	data->envp = head;
-	data->input = NULL;
-	data->cd_str = NULL;
-	data->ret_value = 0;
-	data->exit = 0;
-	data->cmd = NULL;
-	data->full_cmd = NULL;
-	data->pid = 0;
-	data->idoc = 0;
 }
 
 void	ft_echo(t_args *args)
@@ -174,19 +111,6 @@ int	ft_cd(t_data *data) //Penser a verifier si les $var sont accessibles et on p
 	return (0);
 }
 
-void	ft_env(t_data *data)
-{
-	t_env *tmp;
-
-	tmp = data->envp;
-	while (data->envp)
-	{
-		printf("%s\n", data->envp->content);
-		data->envp = data->envp->next;
-	}
-	data->envp = tmp;
-}
-
 int	ft_exit(t_args *args, t_data *data)
 {
 	(void)data;
@@ -194,4 +118,34 @@ int	ft_exit(t_args *args, t_data *data)
 	//free_data();
 	printf("exit\n");
 	exit (0);
+}
+
+void	ft_heredoc(t_data *data, char *delim)
+{
+	char	*input;
+	char	*stock;
+
+	if (!delim || !*delim)
+		return;
+	stock = ft_calloc(sizeof(char), 1);
+	if (!stock)
+		return ;
+	while (1)
+	{
+		data->idoc++;
+		input = readline("> ");
+		if (!input)
+		{
+			printf("Minishell: warning: here-document at line %d delimited by end-of-file (wanted \'%s\')\n", data->idoc, delim);
+			break ;
+		}
+		if (!ft_strncmp(input, delim, ft_strlen(delim)))
+			break ;
+		stock = ft_strjoin(stock, input);
+		if (!stock)
+			break;
+		stock = ft_strjoin(stock, "\n");
+		if (!stock)
+			break;
+	}
 }

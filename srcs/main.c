@@ -6,13 +6,29 @@
 /*   By: achretie <achretie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 13:42:40 by achretie          #+#    #+#             */
-/*   Updated: 2022/12/15 20:57:12 by achretie         ###   ########.fr       */
+/*   Updated: 2022/12/20 04:55:36 by achretie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
 int ret_val = 0;
+
+int	ft_check_space(char *input)
+{
+	int	i;
+	int j;
+
+	j = 0;
+	i = 0;
+	while (input[i])
+	{
+		if (j != ' ')
+			j++;
+		i++;
+	}
+	return (j);
+}
 
 void	ft_trap(int signal)
 {	
@@ -59,12 +75,18 @@ int	main(int ac, char **av, char **envp)
 			printf("exit\n");
 			exit (0);
 		}
-		add_history(input);
-		new = ft_remove_space(input);					//test de parsing, remplace les caracteres par des 0, ceux entre '' par des 1, ceux entre "" par des 2 et les $ entre "" par des 3
-		if (new == NULL)
+		if (!ft_strncmp(input, "\n", ft_strlen(input)))
 		{
 			list_free(&l_args);
-			exit (2);
+			free(new);
+			continue ;
+		}
+		add_history(input);
+		new = ft_remove_space(input);					//test de parsing, remplace les caracteres par des 0, ceux entre '' par des 1, ceux entre "" par des 2 et les $ entre "" par des 3
+		if (new == NULL || !new[0])
+		{
+			list_free(&l_args);
+			continue ;
 		}
 		new_tab = ft_mini_split(new, ' ');
 		data.input = ft_strdup(new);
@@ -76,12 +98,6 @@ int	main(int ac, char **av, char **envp)
 		}
 		free(new);
 		new = NULL;
-		if (!ft_strncmp(input, "\n", ft_strlen(input)))
-		{
-			list_free(&l_args);
-			free(new);
-			continue ;
-		}
 		check_data_cmd(&l_args, new_tab, envp);
 		//test_display_type(&l_args, "main");
 		ft_start_commands(&data, l_args);

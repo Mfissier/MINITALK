@@ -6,7 +6,7 @@
 /*   By: achretie <achretie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 14:14:43 by achretie          #+#    #+#             */
-/*   Updated: 2022/12/13 18:20:09 by achretie         ###   ########.fr       */
+/*   Updated: 2022/12/20 09:32:02 by achretie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ typedef struct s_pex
 	int		**fd;
 	char	**full_cmd;
 	int		*pid;
-	int		bug;
 	pid_t	solo_pid;
 }				t_pex;
 
@@ -82,6 +81,7 @@ typedef struct s_env
 
 typedef struct s_data
 {
+	int		bug;
 	char	*input;
 	char	*cd_str;
 	int		ret_value;
@@ -90,6 +90,8 @@ typedef struct s_data
 	char	**full_cmd;
 	int		pid;
 	int		idoc;
+	int		in;
+	int		out;
 	t_env	*envp;
 }				t_data;
 
@@ -121,7 +123,7 @@ int		take_flag(int *start, int *end, t_args **list, char *flag);
 int		take_parse_write(int *start, int *end, t_args **list);
 
 //construct_list.c
-char	 *cmd_clean(char *str);
+char	*cmd_clean(char *str);
 int		construct_write(t_args **list, int *index, t_args **args);
 int		construct_builtins_cmd(t_args **list, int *index);
 int		construct_env(t_args **list, int *index, t_args **args);
@@ -134,6 +136,37 @@ int		construct_new_path(t_args **list, int *index, t_args **args);
 int		construct_cmd_opt(t_args **list, int *index, t_args **args);
 void	ft_init_data(t_data *data, char **envp);
 void	ft_pwd(void);
+
+//ft_redir.c
+char	*ft_redir_parse(t_data *data, char *str);
+void	ft_redir_db_great(char **split, int i, t_data *data);
+void	ft_redir_great(char **split, int i, t_data *data);
+void	ft_redir_db_less(char **split, int i, t_data *data);
+void	ft_redir_less(char **split, int i, t_data *data);
+
+//ft_pipe.c
+void	ft_end_pipes(t_pex *p);
+int		ft_exec_pipe(t_pex *p, int i, char **envp, t_data *data);
+void	ft_case_first(t_pex *p, char **envp, int i, t_data *data);
+void	ft_case_mid(t_pex *p, char **envp, int i, t_data *data);
+void	ft_case_last(t_pex *p, char **envp, int i, t_data *data);
+
+//ft_multipipes.c
+void	ft_exec_cmd(t_pex *p, char **envp, t_data *data);
+int		ft_isbuiltin(t_args *args, t_data *data);
+int		ft_get_nb_cmd(t_args *args, t_pex *p);
+
+//ft_manage_env.c
+char	**ft_env_to_tab(t_data *data);
+void	ft_env(t_data *data);
+char	*ft_getenv(t_data *data, char *var);
+int		ft_setenv(t_data *data, char *var, char *content);
+
+//ft_main_loop.c
+void    ft_main_loop(t_pex *p, t_data *data, t_args *args);
+void	ft_reset(t_data *data);
+int		ft_start_commands(t_data *data, t_args *args);
+void	ft_init_data(t_data *data, char **envp);
 
 //list_2.c
 int		ft_cd(t_data *data);
@@ -156,7 +189,7 @@ void	ft_add_to_env(t_data *data, char *arg);
 void	ft_add_to_env_plus(t_data *data, char *arg);
 void	ft_print_export(t_data *data);
 int		ft_start_commands(t_data *data, t_args *args);
-char	*ft_execve_path(char **cmd, char **envp, t_pex *p);
+char	*ft_execve_path(char **cmd, char **envp);
 void	ft_heredoc(t_data *data, char *delim);
 int		ft_exit(t_args *args, t_data *data);
 
@@ -194,5 +227,6 @@ int		analysis_operator(t_args **list, int *index, char **sstr, t_args **args);
 
 //ft_free.c
 void	free_sstr(char **sstr);
+int		ft_strcmp(char *s1, char *s2);
 
 #endif
